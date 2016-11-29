@@ -1,0 +1,2 @@
+0 0,12 * * * /source/smarthome_test/app_test/script/gen_apk.py >> /root/log/log1
+10 0,12 * * * /source/smarthome_test/app_test/uiautomation/script/gen_apk.py >> /root/log/log2

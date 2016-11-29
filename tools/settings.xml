@@ -1,0 +1,59 @@
+<!--
+小米Maven资源库公用配置文件
+维护：chenzhen@xiaomi.com
+最后更新：2013-10-28
+-->
+<settings>
+  <mirrors>
+    <mirror>
+      <!--This sends everything else to /public -->
+      <id>nexus</id>
+      <mirrorOf>*</mirrorOf>
+      <url>http://nexus.d.xiaomi.net/nexus/content/groups/public</url>
+    </mirror>
+  </mirrors>
+  <profiles>
+    <profile>
+      <id>development</id>
+      <repositories>
+        <repository>
+          <id>central</id>
+          <url>http://nexus</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+      </repositories>
+     <pluginRepositories>
+        <pluginRepository>
+          <id>central</id>
+          <url>http://nexus</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+  </profiles>
+  <activeProfiles>
+    <activeProfile>development</activeProfile>
+  </activeProfiles>
+
+    <servers>
+    <server>
+      <id>deploy</id>
+      <username>admin</username>
+      <password>admin123</password>
+    </server>
+
+    <server>
+      <id>archiva.internal</id>
+      <username>deployment</username>
+      <password>system1</password>
+    </server>
+    <server>
+      <id>archiva.snapshots</id>
+      <username>deployment</username>
+      <password>system1</password>
+    </server>
+  </servers>
+
+</settings>
