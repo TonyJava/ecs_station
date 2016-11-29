@@ -50,7 +50,7 @@ MIDDLEWARE = [
     #'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'ecs_ground_station.urls'
+ROOT_URLCONF = 'ecs_station.urls'
 
 TEMPLATES = [
     {
