@@ -16,6 +16,10 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
+from station_serial.views import * ;
+
 urlpatterns = [
     #url(r'^admin/', admin.site.urls),
+    url(r'^station/list_command?.*$', list_command),
+    url(r'^station/insert_command?.*$', insert_command),
 ]

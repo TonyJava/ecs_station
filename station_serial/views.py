@@ -1,5 +1,6 @@
-from django.shortcuts import render
-
+#from django.shortcuts import render
+from django.http import Http404, HttpResponse
+import json ;
 # Create your views here.
 
 
@@ -13,22 +14,45 @@ def list_command(req):
             res[str(cmd.key)] = str(cmd.code);
     except :
         print traceback.format_exc();
-        raise Http404() ;
+        #raise Http404() ;
     return HttpResponse(json.dumps(res));
 
 
-def insert_command(req,key,code):
+def insert_command(req):
     try:
         res = {} ;
-        cmd = command_list.objects.get(key=key);
-        if cmd != None :
-            res[str(cmd.key)] = str(cmd.code) ;
-            cmd.code = code ;
-            cmd.save();
-        else :
-            cmd = command_list(key = key ,code = code);
-            cmd.save();
+        inp = req.read();
+        if len(inp) > 0 :
+            i_cmd = json.load(str(inp));
+            key = i_cmd["key"];
+            code = i_cmd["code"];
+            cmd = command_list.objects.get(key=key);
+            if cmd != None :
+                res[str(cmd.key)] = str(cmd.code) ;
+                cmd.code = code ;
+                cmd.save();
+            else :
+                cmd = command_list(key = key ,code = code);
+                cmd.save();
     except :
         print traceback.format_exc();
-        raise Http404() ;
+        #raise Http404() ;
     return HttpResponse(json.dumps(res));
+
+def delete_command(req):
+    try:
+        res = {} ;
+        inp = req.read();
+        if len(inp) > 0 :
+            cmds = json.load(inp);
+            for cmd in cmds:
+                tmp = command_list.objects.get(key=cmd) ;
+                if tmp != None :
+                    tmp.delete();
+        else :
+            command_list.objects.all().delete();
+    except:
+        print traceback.format_exc();
+    return HttpResponse(json.dumps(res));
+
+    
