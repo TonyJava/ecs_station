@@ -15,7 +15,7 @@ class ecs_http_client:
         if len(key) > 0 :
             resp = requests.get(host+"/station/delete_command/",data=json.dumps([str(key)]));
         else :
-            resp = requests.get(host+"/station/delete_command/";
+            resp = requests.get(host+"/station/delete_command/");
         return json.loads(resp.text) 
 
 if __name__ == '__main__':
