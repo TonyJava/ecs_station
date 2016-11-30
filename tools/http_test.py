@@ -2,7 +2,7 @@ import httplib,urllib,random,json,string ,requests;
 
 
 class ecs_http_client:
-    host = "127.0.0.1:8000"
+    host = "http://127.0.0.1:8000"
     def list_command(self,host = None):
         if host == None :
             host = self.host ; 
