@@ -62,3 +62,58 @@ def delete_command(req):
         print traceback.format_exc();
     return HttpResponse(json.dumps(res));
 
+def list_var(req):
+    try:
+        res = [] ;
+        cmds = var_list.objects.all();
+        for cmd in cmds :
+            res.append({"key":str(cmd.key),"code":str(cmd.code)});
+            #res[str(cmd.key)] = str(cmd.code);
+    except :
+        print traceback.format_exc();
+        #raise Http404() ;
+    return HttpResponse(json.dumps(res));
+
+
+def insert_var(req):
+    try:
+        res = {} ;
+        inp = req.read();
+        if len(inp) > 0 :
+            i_cmd = json.loads(str(inp));
+            key = i_cmd["key"];
+            code = i_cmd["code"];
+            try:
+                cmd = var_list.objects.get(key=key);
+            except:
+                cmd = None ;
+            if cmd != None :
+                res[str(cmd.key)] = str(cmd.code) ;
+                cmd.code = code ;
+                cmd.save();
+            else :
+                cmd = var_list(key = key ,code = code);
+                cmd.save();
+    except :
+        print traceback.format_exc();
+        #raise Http404() ;
+    return HttpResponse(json.dumps(res));
+
+def delete_var(req):
+    try:
+        res = {} ;
+        inp = req.read();
+        if len(inp) > 0 :
+            cmds = json.loads(inp);
+            for cmd in cmds:
+                try:
+                    tmp = var_list.objects.get(key=cmd) ;
+                except:
+                    tmp = None ;
+                if tmp != None :
+                    tmp.delete();
+        else :
+            var_list.objects.all().delete();
+    except:
+        print traceback.format_exc();
+    return HttpResponse(json.dumps(res));

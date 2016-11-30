@@ -23,4 +23,7 @@ urlpatterns = [
     url(r'^station/list_command?.*$', list_command),
     url(r'^station/insert_command?.*$', insert_command),
     url(r'^station/delete_command?.*$', delete_command),
+    url(r'^station/list_command?.*$', list_var),
+    url(r'^station/insert_command?.*$', insert_var),
+    url(r'^station/delete_command?.*$', delete_var),
 ]
