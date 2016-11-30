@@ -22,4 +22,5 @@ urlpatterns = [
     #url(r'^admin/', admin.site.urls),
     url(r'^station/list_command?.*$', list_command),
     url(r'^station/insert_command?.*$', insert_command),
+    url(r'^station/delete_command?.*$', delete_command),
 ]
