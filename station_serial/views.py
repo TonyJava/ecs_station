@@ -27,7 +27,10 @@ def insert_command(req):
             i_cmd = json.loads(str(inp));
             key = i_cmd["key"];
             code = i_cmd["code"];
-            cmd = command_list.objects.get(key=key);
+            try:
+                cmd = command_list.objects.get(key=key);
+            except:
+                cmt = None ;
             if cmd != None :
                 res[str(cmd.key)] = str(cmd.code) ;
                 cmd.code = code ;
@@ -47,7 +50,10 @@ def delete_command(req):
         if len(inp) > 0 :
             cmds = json.loads(inp);
             for cmd in cmds:
-                tmp = command_list.objects.get(key=cmd) ;
+                try:
+                    tmp = command_list.objects.get(key=cmd) ;
+                except:
+                    tmp = None ;
                 if tmp != None :
                     tmp.delete();
         else :
