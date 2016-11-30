@@ -1,6 +1,6 @@
 #from django.shortcuts import render
 from django.http import Http404, HttpResponse
-import traceback,json,sys,random ; ;
+import traceback,json,sys,random ;
 # Create your views here.
 
 
