@@ -11,7 +11,7 @@ def list_command(req):
         res = [] ;
         cmds = command_list.objects.all();
         for cmd in cmds :
-            res.append(["key":str(cmd.key),"code":str(cmd.code)]);
+            res.append({"key":str(cmd.key),"code":str(cmd.code)});
             #res[str(cmd.key)] = str(cmd.code);
     except :
         print traceback.format_exc();
