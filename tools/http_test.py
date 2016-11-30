@@ -1,4 +1,4 @@
-import httplib,urllib,random,json,string ;
+import httplib,urllib,random,json,string ,requests;
 
 
 class ecs_http_client:
