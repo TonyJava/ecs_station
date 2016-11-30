@@ -8,10 +8,11 @@ from models import * ;
 
 def list_command(req):
     try:
-        res = {} ;
+        res = [] ;
         cmds = command_list.objects.all();
         for cmd in cmds :
-            res[str(cmd.key)] = str(cmd.code);
+            res.append(["key":str(cmd.key),"code":str(cmd.code)]);
+            #res[str(cmd.key)] = str(cmd.code);
     except :
         print traceback.format_exc();
         #raise Http404() ;
@@ -55,4 +56,3 @@ def delete_command(req):
         print traceback.format_exc();
     return HttpResponse(json.dumps(res));
 
-    
