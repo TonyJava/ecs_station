@@ -30,7 +30,7 @@ def insert_command(req):
             try:
                 cmd = command_list.objects.get(key=key);
             except:
-                cmt = None ;
+                cmd = None ;
             if cmd != None :
                 res[str(cmd.key)] = str(cmd.code) ;
                 cmd.code = code ;
