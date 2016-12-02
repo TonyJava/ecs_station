@@ -9,8 +9,12 @@ class constant_len_list :
         if len(self.l) > self.num and self.num > 0 :
             self.l = self.l[len(self.l)-self.num:]
      
+    def get_data(self):
+        return self.l ;
+        
     def __str__(self):
         return str(self.l);
+
         
         
 if __name__ == '__main__':

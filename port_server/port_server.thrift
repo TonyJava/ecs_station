@@ -29,10 +29,14 @@ service port_server {
    string exc(1:string cmd),
    oneway void exc_without_return(1:string cmd),
 
-   string send_cmd(1:string key),
+   string set_serial_port(1:string port,2:i32 rate),
+
+   oneway void send_cmd(1:string code),
 
    string get_var(1:string key),
    string get_var_list(1:string key),
+   string get_var_table(),
+
    string set_list_len(1:i32 len),
 
    // Smart Config

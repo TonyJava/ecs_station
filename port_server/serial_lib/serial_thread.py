@@ -23,13 +23,19 @@ class serial_listen_thread(threading.Thread):
         thread.start_new_thread(self.__rece_thread__,());
         # thread.start_new_thread(self.send_thread,());
     
+    def set_serial_port(self,port,rate):
+        res = False ;
+        if isinstance(port,str) && isinstance(rate,int) : 
+            self.port = port ;
+            self.rate = rate ;
+            self.__open_port__();
+            res = True ;
+        return res ;
+        
     def __open_port__(self):
         if self.serial_port.isOpen() :
             self.serial_port.close();
         self.serial_port.open();
-    # def send_thread(self):
-    #     while self.running:
-    #         self.serial_port.write(self.send_queue.get());
             
     def __rece_thread__(self):
         while self.running:

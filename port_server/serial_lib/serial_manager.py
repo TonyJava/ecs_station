@@ -15,19 +15,12 @@ class serial_manager(threading.Thread):
         self.cmd_queue = Queue.Queue();
         self.running = False ;
        
+    def set_serial_port(self,port,rate):
+        return self.sth.set_serial_port(port,rate);
+
     def set_cache_size(self,cache_size):
         self.cache_size = cache_size ;
 
-    def get_serial_value(self,key):
-        v = None ;
-        if serial_manager.cmd_map.has_key(key):
-            v=serial_manager.cmd_map[key];
-        elif serial_manager.VALUE_MAP.has_key(key):
-            v= serial_manager.VALUE_MAP[key];
-        if v != None :
-            return self.sth.send(v) ;
-        else :
-            return 0 ;
     
     def run(self):
         self.running = True ;
@@ -48,15 +41,14 @@ class serial_manager(threading.Thread):
                 print str(e);
             time.sleep(0.01)         
     
-    def get_value(self,key):
-        if self.cache.has_key(key) :
-            return self.cache[key];
-        else :
-            return 0 ;
-     
-    def set_command(self,cmd):
-        if cmd in serial_manager.cmd_map :
-            self.cmd_queue.put(cmd) ;
+    def get_var(self,key):
+        return self.cache[key];
+
+    def get_var_table(self):
+        return self.cache ;
+
+    def send_command(self,cmd):
+        return self.sth.send(cmd);
             
     def __refresh_list__(self):
         start_time = time.time();
@@ -71,7 +63,10 @@ class serial_manager(threading.Thread):
                     else :
                         self.cache_list[key].num = self.cache_size ;
                     self.cache_list[key].add_tail(self.get_value(key));
-
+    
+    def get_var_list(self,key):
+        l = self.cache_list[key].get_data();
+        return l ;
 
 
 if __name__ == '__main__':

@@ -38,10 +38,18 @@ class Iface:
     """
     pass
 
-  def send_cmd(self, key):
+  def set_serial_port(self, port, rate):
     """
     Parameters:
-     - key
+     - port
+     - rate
+    """
+    pass
+
+  def send_cmd(self, code):
+    """
+    Parameters:
+     - code
     """
     pass
 
@@ -57,6 +65,9 @@ class Iface:
     Parameters:
      - key
     """
+    pass
+
+  def get_var_table(self):
     pass
 
   def set_list_len(self, len):
@@ -124,23 +135,25 @@ class Client(Iface):
     args.write(self._oprot)
     self._oprot.writeMessageEnd()
     self._oprot.trans.flush()
-  def send_cmd(self, key):
+  def set_serial_port(self, port, rate):
     """
     Parameters:
-     - key
+     - port
+     - rate
     """
-    self.send_send_cmd(key)
-    return self.recv_send_cmd()
+    self.send_set_serial_port(port, rate)
+    return self.recv_set_serial_port()
 
-  def send_send_cmd(self, key):
-    self._oprot.writeMessageBegin('send_cmd', TMessageType.CALL, self._seqid)
-    args = send_cmd_args()
-    args.key = key
+  def send_set_serial_port(self, port, rate):
+    self._oprot.writeMessageBegin('set_serial_port', TMessageType.CALL, self._seqid)
+    args = set_serial_port_args()
+    args.port = port
+    args.rate = rate
     args.write(self._oprot)
     self._oprot.writeMessageEnd()
     self._oprot.trans.flush()
 
-  def recv_send_cmd(self):
+  def recv_set_serial_port(self):
     iprot = self._iprot
     (fname, mtype, rseqid) = iprot.readMessageBegin()
     if mtype == TMessageType.EXCEPTION:
@@ -148,13 +161,27 @@ class Client(Iface):
       x.read(iprot)
       iprot.readMessageEnd()
       raise x
-    result = send_cmd_result()
+    result = set_serial_port_result()
     result.read(iprot)
     iprot.readMessageEnd()
     if result.success is not None:
       return result.success
-    raise TApplicationException(TApplicationException.MISSING_RESULT, "send_cmd failed: unknown result")
+    raise TApplicationException(TApplicationException.MISSING_RESULT, "set_serial_port failed: unknown result")
 
+  def send_cmd(self, code):
+    """
+    Parameters:
+     - code
+    """
+    self.send_send_cmd(code)
+
+  def send_send_cmd(self, code):
+    self._oprot.writeMessageBegin('send_cmd', TMessageType.ONEWAY, self._seqid)
+    args = send_cmd_args()
+    args.code = code
+    args.write(self._oprot)
+    self._oprot.writeMessageEnd()
+    self._oprot.trans.flush()
   def get_var(self, key):
     """
     Parameters:
@@ -217,6 +244,32 @@ class Client(Iface):
       return result.success
     raise TApplicationException(TApplicationException.MISSING_RESULT, "get_var_list failed: unknown result")
 
+  def get_var_table(self):
+    self.send_get_var_table()
+    return self.recv_get_var_table()
+
+  def send_get_var_table(self):
+    self._oprot.writeMessageBegin('get_var_table', TMessageType.CALL, self._seqid)
+    args = get_var_table_args()
+    args.write(self._oprot)
+    self._oprot.writeMessageEnd()
+    self._oprot.trans.flush()
+
+  def recv_get_var_table(self):
+    iprot = self._iprot
+    (fname, mtype, rseqid) = iprot.readMessageBegin()
+    if mtype == TMessageType.EXCEPTION:
+      x = TApplicationException()
+      x.read(iprot)
+      iprot.readMessageEnd()
+      raise x
+    result = get_var_table_result()
+    result.read(iprot)
+    iprot.readMessageEnd()
+    if result.success is not None:
+      return result.success
+    raise TApplicationException(TApplicationException.MISSING_RESULT, "get_var_table failed: unknown result")
+
   def set_list_len(self, len):
     """
     Parameters:
@@ -255,9 +308,11 @@ class Processor(Iface, TProcessor):
     self._processMap = {}
     self._processMap["exc"] = Processor.process_exc
     self._processMap["exc_without_return"] = Processor.process_exc_without_return
+    self._processMap["set_serial_port"] = Processor.process_set_serial_port
     self._processMap["send_cmd"] = Processor.process_send_cmd
     self._processMap["get_var"] = Processor.process_get_var
     self._processMap["get_var_list"] = Processor.process_get_var_list
+    self._processMap["get_var_table"] = Processor.process_get_var_table
     self._processMap["set_list_len"] = Processor.process_set_list_len
 
   def process(self, iprot, oprot):
@@ -306,13 +361,13 @@ class Processor(Iface, TProcessor):
     except:
       pass
 
-  def process_send_cmd(self, seqid, iprot, oprot):
-    args = send_cmd_args()
+  def process_set_serial_port(self, seqid, iprot, oprot):
+    args = set_serial_port_args()
     args.read(iprot)
     iprot.readMessageEnd()
-    result = send_cmd_result()
+    result = set_serial_port_result()
     try:
-      result.success = self._handler.send_cmd(args.key)
+      result.success = self._handler.set_serial_port(args.port, args.rate)
       msg_type = TMessageType.REPLY
     except (TTransport.TTransportException, KeyboardInterrupt, SystemExit):
       raise
@@ -320,10 +375,22 @@ class Processor(Iface, TProcessor):
       msg_type = TMessageType.EXCEPTION
       logging.exception(ex)
       result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
-    oprot.writeMessageBegin("send_cmd", msg_type, seqid)
+    oprot.writeMessageBegin("set_serial_port", msg_type, seqid)
     result.write(oprot)
     oprot.writeMessageEnd()
     oprot.trans.flush()
+
+  def process_send_cmd(self, seqid, iprot, oprot):
+    args = send_cmd_args()
+    args.read(iprot)
+    iprot.readMessageEnd()
+    try:
+      self._handler.send_cmd(args.code)
+      msg_type = TMessageType.REPLY
+    except (TTransport.TTransportException, KeyboardInterrupt, SystemExit):
+      raise
+    except:
+      pass
 
   def process_get_var(self, seqid, iprot, oprot):
     args = get_var_args()
@@ -359,6 +426,25 @@ class Processor(Iface, TProcessor):
       logging.exception(ex)
       result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
     oprot.writeMessageBegin("get_var_list", msg_type, seqid)
+    result.write(oprot)
+    oprot.writeMessageEnd()
+    oprot.trans.flush()
+
+  def process_get_var_table(self, seqid, iprot, oprot):
+    args = get_var_table_args()
+    args.read(iprot)
+    iprot.readMessageEnd()
+    result = get_var_table_result()
+    try:
+      result.success = self._handler.get_var_table()
+      msg_type = TMessageType.REPLY
+    except (TTransport.TTransportException, KeyboardInterrupt, SystemExit):
+      raise
+    except Exception as ex:
+      msg_type = TMessageType.EXCEPTION
+      logging.exception(ex)
+      result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
+    oprot.writeMessageBegin("get_var_table", msg_type, seqid)
     result.write(oprot)
     oprot.writeMessageEnd()
     oprot.trans.flush()
@@ -579,19 +665,22 @@ class exc_without_return_args:
   def __ne__(self, other):
     return not (self == other)
 
-class send_cmd_args:
+class set_serial_port_args:
   """
   Attributes:
-   - key
+   - port
+   - rate
   """
 
   thrift_spec = (
     None, # 0
-    (1, TType.STRING, 'key', None, None, ), # 1
+    (1, TType.STRING, 'port', None, None, ), # 1
+    (2, TType.I32, 'rate', None, None, ), # 2
   )
 
-  def __init__(self, key=None,):
-    self.key = key
+  def __init__(self, port=None, rate=None,):
+    self.port = port
+    self.rate = rate
 
   def read(self, iprot):
     if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
@@ -604,7 +693,12 @@ class send_cmd_args:
         break
       if fid == 1:
         if ftype == TType.STRING:
-          self.key = iprot.readString()
+          self.port = iprot.readString()
+        else:
+          iprot.skip(ftype)
+      elif fid == 2:
+        if ftype == TType.I32:
+          self.rate = iprot.readI32()
         else:
           iprot.skip(ftype)
       else:
@@ -616,10 +710,14 @@ class send_cmd_args:
     if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
-    oprot.writeStructBegin('send_cmd_args')
-    if self.key is not None:
-      oprot.writeFieldBegin('key', TType.STRING, 1)
-      oprot.writeString(self.key)
+    oprot.writeStructBegin('set_serial_port_args')
+    if self.port is not None:
+      oprot.writeFieldBegin('port', TType.STRING, 1)
+      oprot.writeString(self.port)
+      oprot.writeFieldEnd()
+    if self.rate is not None:
+      oprot.writeFieldBegin('rate', TType.I32, 2)
+      oprot.writeI32(self.rate)
       oprot.writeFieldEnd()
     oprot.writeFieldStop()
     oprot.writeStructEnd()
@@ -630,7 +728,8 @@ class send_cmd_args:
 
   def __hash__(self):
     value = 17
-    value = (value * 31) ^ hash(self.key)
+    value = (value * 31) ^ hash(self.port)
+    value = (value * 31) ^ hash(self.rate)
     return value
 
   def __repr__(self):
@@ -644,7 +743,7 @@ class send_cmd_args:
   def __ne__(self, other):
     return not (self == other)
 
-class send_cmd_result:
+class set_serial_port_result:
   """
   Attributes:
    - success
@@ -680,7 +779,7 @@ class send_cmd_result:
     if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
-    oprot.writeStructBegin('send_cmd_result')
+    oprot.writeStructBegin('set_serial_port_result')
     if self.success is not None:
       oprot.writeFieldBegin('success', TType.STRING, 0)
       oprot.writeString(self.success)
@@ -695,6 +794,71 @@ class send_cmd_result:
   def __hash__(self):
     value = 17
     value = (value * 31) ^ hash(self.success)
+    return value
+
+  def __repr__(self):
+    L = ['%s=%r' % (key, value)
+      for key, value in self.__dict__.iteritems()]
+    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+  def __eq__(self, other):
+    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return not (self == other)
+
+class send_cmd_args:
+  """
+  Attributes:
+   - code
+  """
+
+  thrift_spec = (
+    None, # 0
+    (1, TType.STRING, 'code', None, None, ), # 1
+  )
+
+  def __init__(self, code=None,):
+    self.code = code
+
+  def read(self, iprot):
+    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
+      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
+      return
+    iprot.readStructBegin()
+    while True:
+      (fname, ftype, fid) = iprot.readFieldBegin()
+      if ftype == TType.STOP:
+        break
+      if fid == 1:
+        if ftype == TType.STRING:
+          self.code = iprot.readString()
+        else:
+          iprot.skip(ftype)
+      else:
+        iprot.skip(ftype)
+      iprot.readFieldEnd()
+    iprot.readStructEnd()
+
+  def write(self, oprot):
+    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
+      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
+      return
+    oprot.writeStructBegin('send_cmd_args')
+    if self.code is not None:
+      oprot.writeFieldBegin('code', TType.STRING, 1)
+      oprot.writeString(self.code)
+      oprot.writeFieldEnd()
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+
+  def validate(self):
+    return
+
+
+  def __hash__(self):
+    value = 17
+    value = (value * 31) ^ hash(self.code)
     return value
 
   def __repr__(self):
@@ -939,6 +1103,116 @@ class get_var_list_result:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
     oprot.writeStructBegin('get_var_list_result')
+    if self.success is not None:
+      oprot.writeFieldBegin('success', TType.STRING, 0)
+      oprot.writeString(self.success)
+      oprot.writeFieldEnd()
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+
+  def validate(self):
+    return
+
+
+  def __hash__(self):
+    value = 17
+    value = (value * 31) ^ hash(self.success)
+    return value
+
+  def __repr__(self):
+    L = ['%s=%r' % (key, value)
+      for key, value in self.__dict__.iteritems()]
+    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+  def __eq__(self, other):
+    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return not (self == other)
+
+class get_var_table_args:
+
+  thrift_spec = (
+  )
+
+  def read(self, iprot):
+    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
+      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
+      return
+    iprot.readStructBegin()
+    while True:
+      (fname, ftype, fid) = iprot.readFieldBegin()
+      if ftype == TType.STOP:
+        break
+      else:
+        iprot.skip(ftype)
+      iprot.readFieldEnd()
+    iprot.readStructEnd()
+
+  def write(self, oprot):
+    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
+      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
+      return
+    oprot.writeStructBegin('get_var_table_args')
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+
+  def validate(self):
+    return
+
+
+  def __hash__(self):
+    value = 17
+    return value
+
+  def __repr__(self):
+    L = ['%s=%r' % (key, value)
+      for key, value in self.__dict__.iteritems()]
+    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+  def __eq__(self, other):
+    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return not (self == other)
+
+class get_var_table_result:
+  """
+  Attributes:
+   - success
+  """
+
+  thrift_spec = (
+    (0, TType.STRING, 'success', None, None, ), # 0
+  )
+
+  def __init__(self, success=None,):
+    self.success = success
+
+  def read(self, iprot):
+    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
+      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
+      return
+    iprot.readStructBegin()
+    while True:
+      (fname, ftype, fid) = iprot.readFieldBegin()
+      if ftype == TType.STOP:
+        break
+      if fid == 0:
+        if ftype == TType.STRING:
+          self.success = iprot.readString()
+        else:
+          iprot.skip(ftype)
+      else:
+        iprot.skip(ftype)
+      iprot.readFieldEnd()
+    iprot.readStructEnd()
+
+  def write(self, oprot):
+    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
+      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
+      return
+    oprot.writeStructBegin('get_var_table_result')
     if self.success is not None:
       oprot.writeFieldBegin('success', TType.STRING, 0)
       oprot.writeString(self.success)
