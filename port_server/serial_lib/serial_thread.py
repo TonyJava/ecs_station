@@ -25,7 +25,7 @@ class serial_listen_thread(threading.Thread):
     
     def set_serial_port(self,port,rate):
         res = False ;
-        if isinstance(port,str) && isinstance(rate,int) : 
+        if isinstance(port,str) and isinstance(rate,int) : 
             self.port = port ;
             self.rate = rate ;
             self.__open_port__();
