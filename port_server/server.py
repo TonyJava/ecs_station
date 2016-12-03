@@ -50,7 +50,7 @@ class port_server_handler:
             val = self.sm.get_value(key);
             res = {"code":0,"result":val} ;
         except Exception as e :
-            res = {"code":1,"result":e};
+            res = {"code":1,"result":str(e)};
         return json.dumps(res);
 
     def get_var_table(self,key):
@@ -59,7 +59,7 @@ class port_server_handler:
             rtn = self.sm.get_var_table()
             res = {"code":0,"result":rtn};
         except Exception as e :
-            res = {"code":1,"result":e};
+            res = {"code":1,"result":str(e)};
         return json.dumps(res);
 
     def get_var_list(self,key):
@@ -68,7 +68,7 @@ class port_server_handler:
             rtn = self.sm.get_var_list(key);
             res = {"code":0,"result":rtn};
         except Exception as e :
-            res = {"code":1,"result":e};
+            res = {"code":1,"result":str(e)};
         return json.dumps(res);
     
     def set_list_len(self,len):
@@ -77,13 +77,13 @@ class port_server_handler:
             self.sm.set_cache_size(len);
             res = {"code":0,"result":"ok"};
         except Exception as e :
-            res = {"code":1,"result":e};
+            res = {"code":1,"result":str(e)};
         return json.dumps(res); 
 
 
 
 if __name__ == '__main__':
-    print "Server start."
+    print "Server initialization."
     handler = port_server_handler()
     processor = port_server.Processor(handler)
     transport = TSocket.TServerSocket(port=9090)
