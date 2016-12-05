@@ -9,7 +9,7 @@ class serial_listen_thread(threading.Thread):
         threading.Thread.__init__(self);
         self.port = port ;
         self.rate = rate ;
-        self.serial_port = serial.Serial(port,rate);
+        #self.serial_port = serial.Serial(port,rate);
         #self.serial_port.open();
         self.serial_port.timeout = 0.5
         self.running = False ;
@@ -35,6 +35,7 @@ class serial_listen_thread(threading.Thread):
     def __open_port__(self):
         if self.serial_port.isOpen() :
             self.serial_port.close();
+        self.serial_port = serial.Serial(port,rate);
         self.serial_port.open();
             
     def __rece_thread__(self):
