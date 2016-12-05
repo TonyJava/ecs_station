@@ -9,7 +9,6 @@ class serial_manager(threading.Thread):
         threading.Thread.__init__(self);
         self.cache_size = cache_size ;
         self.sth = serial_listen_thread(port,rate);
-        self.sth.start();
         self.cache = {};
         self.cache_list = {} ;
         self.cmd_queue = Queue.Queue();
@@ -23,9 +22,13 @@ class serial_manager(threading.Thread):
 
     
     def run(self):
-        self.running = True ;
-        thread.start_new_thread(self.__refresh_cache__,());
-        thread.start_new_thread(self.__refresh_list__,());
+        try:
+            self.sth.start();
+            thread.start_new_thread(self.__refresh_cache__,());
+            thread.start_new_thread(self.__refresh_list__,());
+            self.running = True ;
+        except :
+            self.running = False ;
     
     def stop(self):
         self.running = False ;
@@ -42,12 +45,18 @@ class serial_manager(threading.Thread):
             time.sleep(0.01)         
     
     def get_var(self,key):
+        if self.running ==  False :
+            raise Exception("Serial port manger is not running");
         return self.cache[key];
 
     def get_var_table(self):
+        if self.running ==  False :
+            raise Exception("Serial port manger is not running");
         return self.cache ;
 
     def send_command(self,cmd):
+        if self.running ==  False :
+            raise Exception("Serial port manger is not running");
         return self.sth.send(cmd);
             
     def __refresh_list__(self):
@@ -65,6 +74,8 @@ class serial_manager(threading.Thread):
                     self.cache_list[key].add_tail(self.get_value(key));
     
     def get_var_list(self,key):
+        if self.running ==  False :
+            raise Exception("Serial port manger is not running");
         l = self.cache_list[key].get_data();
         return l ;
 
