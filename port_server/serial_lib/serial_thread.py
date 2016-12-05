@@ -11,7 +11,7 @@ class serial_listen_thread(threading.Thread):
         self.rate = rate ;
         #self.serial_port = serial.Serial(port,rate);
         #self.serial_port.open();
-        self.serial_port.timeout = 0.5
+        #self.serial_port.timeout = 0.5
         self.running = False ;
         self.recv_queue = Queue.Queue();
         #self.send_queue = Queue.Queue(maxsize=1);
@@ -37,6 +37,7 @@ class serial_listen_thread(threading.Thread):
             self.serial_port.close();
         self.serial_port = serial.Serial(port,rate);
         self.serial_port.open();
+        self.serial_port.timeout = 0.5
             
     def __rece_thread__(self):
         while self.running:
