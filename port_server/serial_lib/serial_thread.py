@@ -33,11 +33,11 @@ class serial_listen_thread(threading.Thread):
         return res ;
         
     def __open_port__(self):
-        if self.serial_port.isOpen() :
+        if hasattr(self,serial_port) and self.serial_port.isOpen() :
             self.serial_port.close();
         self.serial_port = serial.Serial(port,rate);
         self.serial_port.open();
-        self.serial_port.timeout = 0.5
+        self.serial_port.timeout = 0.5;
             
     def __rece_thread__(self):
         while self.running:
