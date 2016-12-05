@@ -33,7 +33,7 @@ class serial_listen_thread(threading.Thread):
         return res ;
         
     def __open_port__(self):
-        if hasattr(self,serial_port) and self.serial_port.isOpen() :
+        if hasattr(self,'serial_port') and self.serial_port.isOpen() :
             self.serial_port.close();
         self.serial_port = serial.Serial(port,rate);
         self.serial_port.open();
