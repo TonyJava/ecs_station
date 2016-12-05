@@ -25,6 +25,7 @@ class port_server_handler:
         
 
     def exc(self,cmd):
+        res = "" ;
         try:
             res = os.popen(cmd).read();
         except Exception as e :
