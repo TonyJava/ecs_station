@@ -132,7 +132,7 @@ ApplicationWindow{
             width: 120
             MouseArea{
                 anchors.fill: parent
-                onClicked: {var component = Qt.createComponent("/home/wyc/code/ui/powerGraph.qml");
+                onClicked: {var component = Qt.createComponent("./powerGraph.qml");
                             if(component.status == Component.Ready){
 								isHyGraphSubWindowExist = true
                                 powerWindowObject = component.createObject()
