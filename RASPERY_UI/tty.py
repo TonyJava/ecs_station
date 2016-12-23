@@ -34,7 +34,7 @@ class CustomSerial(threading.Thread):
                 jc = self._d.decrypt(a2b_hex(content[:320])).decode('utf-8')
                 jc = jc[:jc.find('}') + 1]
                 j = json.loads(jc)     
-                # print(j)          
+                print(j)          
                 power = j["LiVolt"] * j["TotalCurrent"]
                 # print(power)
                 # hyPower = tools.fakeData(power)
