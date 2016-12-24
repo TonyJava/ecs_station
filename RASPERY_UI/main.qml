@@ -31,10 +31,10 @@ ApplicationWindow{
     property double hyCapacity: 9 * (30.0 / 0.1) / 700 //700L出1KWH的电
     property double wholeEnergy: liCapacity + hyCapacity
     property double currentEnergy: wholeEnergy
-    property double r1 = 0.5 ;
-    property double r2 = 1 ;
-    property double r3 = 1 ;
-    property double r4 = 0.5 ;
+    property double r1 : 0.5 ;
+    property double r2 : 1 ;
+    property double r3 : 1 ;
+    property double r4 : 0.5 ;
 
     signal closeApplication()
 
@@ -284,7 +284,7 @@ ApplicationWindow{
         //x:main.width - width * (smallAutoScale + 1) / 2;
         //y:hyRemainDock.y;
         x:parent.width*(r1+r2+r3)/(r1+r2+r3+r4)
-        y:y: liPowerDock.height - height + captionHeight ;
+        y: liPowerDock.height - height + captionHeight ;
         z:-1
         width:parent.width*r4/(r1+r2+r3+r4)
         height: width
