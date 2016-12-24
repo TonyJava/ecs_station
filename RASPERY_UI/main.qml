@@ -424,11 +424,13 @@ ApplicationWindow{
             Rectangle{
                 id:title1
                 x:0
-                y:timeRemainDock.height - 10
+                y:0
                 width : parent.width/3 ;
                 height : parent.height ;
                 Image {
                     id: timeRemainTextLeftPic
+                    x:0
+                    y:0
                     source: "resource/pic/timeRemain.png"
                     width: parent.height
                     height:width
@@ -451,6 +453,8 @@ ApplicationWindow{
                 height : 32 ;
                 Image {
                     id: timeRemainTextRightPic
+                    x:0
+                    y:0
                     source: "resource/pic/gasSpeed.png"
                     width: 30
                     height:30
@@ -473,6 +477,8 @@ ApplicationWindow{
                 height : 32 ;
                 Image {
                     id: mileRemainTextRightPic
+                    x:0
+                    y:0
                     source: "resource/pic/mileRemain.png"
                     width: 30
                     height:30
