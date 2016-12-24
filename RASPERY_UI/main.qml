@@ -357,15 +357,16 @@ ApplicationWindow{
     }
     Rectangle{
         id: timeRemainDock
-        x:100
-        y:380
+        x:parent.width*0.1
+        //y:380
+        y:parent.height - 100 ;
         width: main.width - 2 * x
         height: 50
         color: main.color
         Canvas{
             id: timeRemainCanvas
-            width: timeRemainDock.width
-            height: timeRemainDock.height
+            width: parent.width
+            height: parent.height
 
             property var percent: 100
             property color primaryColor: "#0883bb"
@@ -396,7 +397,7 @@ ApplicationWindow{
 
             Text{
                 id:allPercentText
-                x: (timeRemainCanvas.width - width) / 2
+                x: (parent.width - width) / 2
                 color:"white"
                 text:timeRemainCanvas.percent + "%"
                 font.family: lcdFont.name
@@ -415,17 +416,19 @@ ApplicationWindow{
             }
         }
         Rectangle{
-            x: 60
+            x: 0
 
             Rectangle{
                 id:timeRemainTextLeftWrap
                 x:0
                 y:timeRemainDock.height - 10
+                width : parent.width/3 ;
+                height : 32 ;
                 Image {
                     id: timeRemainTextLeftPic
                     source: "resource/pic/timeRemain.png"
-                    width: 32
-                    height:32
+                    width: parent.height
+                    height:width
                 }
                 Text{
                     id:remainTimeText
@@ -439,8 +442,10 @@ ApplicationWindow{
             }
             Rectangle{
                 id:timeRemainTextRightWrap
-                x:170
+                x: timeRemainTextLeftWrap.x + timeRemainTextLeftWrap.width;
                 y:timeRemainTextLeftWrap.y
+                width : parent.width/3 ;
+                height : 32 ;
                 Image {
                     id: timeRemainTextRightPic
                     source: "resource/pic/gasSpeed.png"
@@ -459,8 +464,10 @@ ApplicationWindow{
             }
             Rectangle{
                 id:mileRemainTextRightWrap
-                x:330
+                x:timeRemainTextRightWrap.x + timeRemainTextRightWrap.width ;
                 y:timeRemainTextLeftWrap.y
+                width : parent.width/3 ;
+                height : 32 ;
                 Image {
                     id: mileRemainTextRightPic
                     source: "resource/pic/mileRemain.png"
