@@ -416,10 +416,11 @@ ApplicationWindow{
             }
         }
         Rectangle{
-            x: 0
+            x:0
+            width:parent.width
 
             Rectangle{
-                id:timeRemainTextLeftWrap
+                id:title1
                 x:0
                 y:timeRemainDock.height - 10
                 width : parent.width/3 ;
@@ -441,9 +442,9 @@ ApplicationWindow{
                 }
             }
             Rectangle{
-                id:timeRemainTextRightWrap
-                x: timeRemainTextLeftWrap.x + timeRemainTextLeftWrap.width;
-                y:timeRemainTextLeftWrap.y
+                id:title2
+                x: title1.x + title1.width;
+                y:title11.y
                 width : parent.width/3 ;
                 height : 32 ;
                 Image {
@@ -463,9 +464,9 @@ ApplicationWindow{
                 }
             }
             Rectangle{
-                id:mileRemainTextRightWrap
-                x:timeRemainTextRightWrap.x + timeRemainTextRightWrap.width ;
-                y:timeRemainTextLeftWrap.y
+                id:title3
+                x:title2.x + title2.width ;
+                y:title2.y
                 width : parent.width/3 ;
                 height : 32 ;
                 Image {
