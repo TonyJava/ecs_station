@@ -38,6 +38,83 @@ ApplicationWindow{
 
     signal closeApplication()
 
+    //氢气剩余仪表
+    Image{
+        id:hyRemainDock
+        //x:200 * (smallAutoScale - 1) / 2;
+        //y:hyPowerDock.height * 0.8 - height + captionHeight + 15 - offSetY;
+        x:0 ;
+        y: hyPowerDock.height - height + captionHeight ;
+        width:parent.width*r1/(r1+r2+r3+r4);
+        height: width ;
+        scale: smallAutoScale
+        source: "resource/pic/hyremain.png"
+        Text{
+            id:hyRemainCaption
+            x:(hyRemainDock.width - width) / 2
+            y:-captionHeight
+            color:"white"
+            text:"氢气剩余"
+            font.family: "文泉驿"
+            font.bold: false
+            font.pointSize: 16
+        }
+        Image{
+            id:hyRemainGraphIcon
+            source: "resource/pic/gas.png"
+            x:hyRemainDock.width / 2 - width / 2
+            y:hyRemainIncicator.y + hyRemainIncicator.height + 10
+            height:40
+            width: 40
+        }
+        Text{
+            id:hyRemainIncicator
+            x:hyRemainDock.width / 2 - width / 2
+            y:0.6*parent.height
+            color:"white"
+            text:"0MPa"
+            font.family: lcdFont.name
+            font.bold: true
+            font.pointSize: 10 * fontScale
+        }
+        Rectangle{
+            id:hyRemainPointerWrapper
+            width:hyRemainDock.width
+            height:hyRemainDock.height
+            color:Qt.rgba(0, 0, 0, 0)
+            property int pointerAngle: -30
+            Canvas{
+                id:hyRemainPointer
+                width:hyRemainDock.width
+                height:hyRemainDock.height
+                property int pointerRadius: 4
+                property int pointerStart: 20
+                onPaint: {
+                    var ctx = getContext("2d");
+                    ctx.save();
+                    ctx.clearRect(0, 0, hyRemainDock.width, hyRemainDock.height);
+                    ctx.beginPath();
+                    ctx.lineWidth = 1;
+                    ctx.strokeStyle = main.mainColor;
+                    ctx.fillStyle = main.mainColor;
+                    ctx.moveTo(hyRemainPointer.pointerStart, hyRemainDock.height / 2);
+                    ctx.lineTo(hyRemainDock.width / 2, hyRemainDock.height / 2 - hyRemainPointer.pointerRadius);
+                    ctx.arc(hyRemainDock.width / 2,
+                            hyRemainDock.height / 2,
+                            hyRemainPointer.pointerRadius,
+                            -Math.PI / 2,
+                            Math.PI / 2);
+                    ctx.lineTo(hyRemainPointer.pointerStart, hyRemainDock.height / 2);
+                    ctx.closePath()
+                    ctx.fill()
+                    ctx.stroke();}
+            }
+            transform: Rotation{origin.x: hyRemainPointerWrapper.width / 2;
+                                origin.y: hyRemainPointerWrapper.height / 2;
+                                angle: hyRemainPointerWrapper.pointerAngle}
+        }
+    }
+
     //氢气仪表
     Image{
         id:hyPowerDock
@@ -200,82 +277,6 @@ ApplicationWindow{
     }
 
 
-    //氢气剩余仪表
-    Image{
-        id:hyRemainDock
-        //x:200 * (smallAutoScale - 1) / 2;
-        //y:hyPowerDock.height * 0.8 - height + captionHeight + 15 - offSetY;
-        x:0 ;
-        y: hyPowerDock.height - height + captionHeight ;
-        width:parent.width*r1/(r1+r2+r3+r4);
-        height: width ;
-        scale: smallAutoScale
-        source: "resource/pic/hyremain.png"
-        Text{
-            id:hyRemainCaption
-            x:(hyRemainDock.width - width) / 2
-            y:-captionHeight
-            color:"white"
-            text:"氢气剩余"
-            font.family: "文泉驿"
-            font.bold: false
-            font.pointSize: 16
-        }
-        Image{
-            id:hyRemainGraphIcon
-            source: "resource/pic/gas.png"
-            x:hyRemainDock.width / 2 - width / 2
-            y:hyRemainIncicator.y + hyRemainIncicator.height + 10
-            height:40
-            width: 40
-        }
-        Text{
-            id:hyRemainIncicator
-            x:hyRemainDock.width / 2 - width / 2
-            y:0.6*parent.height
-            color:"white"
-            text:"0MPa"
-            font.family: lcdFont.name
-            font.bold: true
-            font.pointSize: 10 * fontScale
-        }
-        Rectangle{
-            id:hyRemainPointerWrapper
-            width:hyRemainDock.width
-            height:hyRemainDock.height
-            color:Qt.rgba(0, 0, 0, 0)
-            property int pointerAngle: -30
-            Canvas{
-                id:hyRemainPointer
-                width:hyRemainDock.width
-                height:hyRemainDock.height
-                property int pointerRadius: 4
-                property int pointerStart: 20
-                onPaint: {
-                    var ctx = getContext("2d");
-                    ctx.save();
-                    ctx.clearRect(0, 0, hyRemainDock.width, hyRemainDock.height);
-                    ctx.beginPath();
-                    ctx.lineWidth = 1;
-                    ctx.strokeStyle = main.mainColor;
-                    ctx.fillStyle = main.mainColor;
-                    ctx.moveTo(hyRemainPointer.pointerStart, hyRemainDock.height / 2);
-                    ctx.lineTo(hyRemainDock.width / 2, hyRemainDock.height / 2 - hyRemainPointer.pointerRadius);
-                    ctx.arc(hyRemainDock.width / 2,
-                            hyRemainDock.height / 2,
-                            hyRemainPointer.pointerRadius,
-                            -Math.PI / 2,
-                            Math.PI / 2);
-                    ctx.lineTo(hyRemainPointer.pointerStart, hyRemainDock.height / 2);
-                    ctx.closePath()
-                    ctx.fill()
-                    ctx.stroke();}
-            }
-            transform: Rotation{origin.x: hyRemainPointerWrapper.width / 2;
-                                origin.y: hyRemainPointerWrapper.height / 2;
-                                angle: hyRemainPointerWrapper.pointerAngle}
-        }
-    }
     
     //锂电池剩余仪表
     Image{
