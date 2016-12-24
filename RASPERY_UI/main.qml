@@ -38,12 +38,6 @@ ApplicationWindow{
 
     signal closeApplication()
 
-    Rectangle{
-    id:meter_area
-    x:0
-    y:0
-    width:parent.width
-    color:parent.color
     //氢气剩余仪表
     Image{
         id:hyRemainDock
@@ -361,12 +355,12 @@ ApplicationWindow{
                                 angle: liRemainPointerWrapper.pointerAngle}
         }
     }
-    }
+
     Rectangle{
         id: timeRemainDock
         x:parent.width*0.1
         //y:380
-        y: (parent.height - 100 - meter_area.height)/2 + meter_area.height ;
+        y: (parent.height - 100 - liPowerDock.height-captionHeight)/2 + meter_area.height ;
         width: main.width - 2 * x
         height: 50
         color: main.color
@@ -424,7 +418,7 @@ ApplicationWindow{
         }
         Rectangle{
             x:0
-            y:parent.height
+            y:timeRemainDock.height
             width:parent.width
             height:32
             color:parent.color
