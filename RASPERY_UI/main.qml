@@ -120,7 +120,7 @@ ApplicationWindow{
         id:hyPowerDock
         //x:hyRemainDock.width * 0.9 * (3 * autoScale - 1) / 2 - hyRemainDock.width * (1 - hyRemainDock.scale) / 2 + hyRemainDock.x;
         x:parent.width*r1/(r1+r2+r3+r4);
-        y: captionHeight - offSetY;
+        y: captionHeight ;
         width:parent.width*r2/(r1+r2+r3+r4)
         height: width
         //scale: autoScale
@@ -207,8 +207,8 @@ ApplicationWindow{
         id:liPowerDock
         //x:hyPowerDock.x + width * 0.9 * autoScale;
         x:parent.width*(r1+r2)/(r1+r2+r3+r4);
-        y:captionHeight - offSetY;
-        width:parent.width*r2/(r1+r2+r3+r4)
+        y:captionHeight;
+        width:parent.width*r3/(r1+r2+r3+r4)
         height: width
         scale: autoScale
         source: "resource/pic/li.png"
