@@ -13,7 +13,8 @@ class CustomSerial(threading.Thread):
     '''自定义串口类'''
     def __init__(self, com, baud, root, context):
         threading.Thread.__init__(self)
-        self.s = serial.Serial(com, baud)
+        #self.s = serial.Serial(com, baud)
+        self.s = serial.Serial();
         self.root = root
         self.context = context
         self.pointData = {}
@@ -30,10 +31,11 @@ class CustomSerial(threading.Thread):
     def run(self):
         while(self.isRun):
             try:
-                content=self.s.readline().decode('utf-8')
-                jc = self._d.decrypt(a2b_hex(content[:320])).decode('utf-8')
-                jc = jc[:jc.find('}') + 1]
-                j = json.loads(jc)     
+                #content=self.s.readline().decode('utf-8')
+                #jc = self._d.decrypt(a2b_hex(content[:320])).decode('utf-8')
+                #jc = jc[:jc.find('}') + 1]
+                #j = json.loads(jc)     
+                j = {"HyTemp":0,"HyPress":0,"LiVolt":0,"HyVolt":0,'DCInCurrent':0,"TotalCurrent":0} ;
                 print(j)          
                 power = j["LiVolt"] * j["TotalCurrent"]
                 # print(power)
