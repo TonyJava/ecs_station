@@ -417,14 +417,16 @@ ApplicationWindow{
         }
         Rectangle{
             x:0
+            y:parent.height
             width:parent.width
+            height:32
 
             Rectangle{
                 id:title1
                 x:0
                 y:timeRemainDock.height - 10
                 width : parent.width/3 ;
-                height : 32 ;
+                height : parent.height ;
                 Image {
                     id: timeRemainTextLeftPic
                     source: "resource/pic/timeRemain.png"
@@ -444,7 +446,7 @@ ApplicationWindow{
             Rectangle{
                 id:title2
                 x: title1.x + title1.width;
-                y:title11.y
+                y: 0
                 width : parent.width/3 ;
                 height : 32 ;
                 Image {
@@ -466,7 +468,7 @@ ApplicationWindow{
             Rectangle{
                 id:title3
                 x:title2.x + title2.width ;
-                y:title2.y
+                y:0
                 width : parent.width/3 ;
                 height : 32 ;
                 Image {
@@ -477,7 +479,7 @@ ApplicationWindow{
                 }
                 Text{
                     id:mileRemainText
-                    x:timeRemainTextRightPic.width + 5
+                    x:mileRemainTextRightPic.width + 5
                     color:"white"
                     text:"400KM"
                     font.family: lcdFont.name
