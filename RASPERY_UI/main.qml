@@ -210,7 +210,7 @@ ApplicationWindow{
         y:captionHeight;
         width:parent.width*r3/(r1+r2+r3+r4)
         height: width
-        scale: autoScale
+        //scale: autoScale
         source: "resource/pic/li.png"
         Text{
             id:liPowerCaption
