@@ -360,7 +360,7 @@ ApplicationWindow{
         id: timeRemainDock
         x:parent.width*0.1
         //y:380
-        y: (parent.height - 100 - liPowerDock.height-captionHeight)/2 + meter_area.height ;
+        y: (parent.height - 100 - liPowerDock.height-captionHeight)/2 + liPowerDock.height ;
         width: main.width - 2 * x
         height: 50
         color: main.color
