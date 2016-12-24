@@ -9,8 +9,10 @@ ApplicationWindow{
     y:0
     //width:800;
     //height:480;
-    width: Screen.desktopAvailableWidth
-    height: Screen.desktopAvailableHeight
+    property int total_width:Screen.desktopAvailableWidth
+    property int total_Height:Screen.desktopAvailableHeight
+    width: total_width
+    height: total_Height
     color: "#ff333333";
     visible:true;
     flags:Qt.FramelessWindowHint | Qt.WA_TranslucentBackground;
@@ -29,22 +31,190 @@ ApplicationWindow{
     property double hyCapacity: 9 * (30.0 / 0.1) / 700 //700L出1KWH的电
     property double wholeEnergy: liCapacity + hyCapacity
     property double currentEnergy: wholeEnergy
+    property double r1 = 0.5 ;
+    property double r2 = 1 ;
+    property double r3 = 1 ;
+    property double r4 = 0.5 ;
 
     signal closeApplication()
+
+    //氢气仪表
+    Image{
+        id:hyPowerDock
+        //x:hyRemainDock.width * 0.9 * (3 * autoScale - 1) / 2 - hyRemainDock.width * (1 - hyRemainDock.scale) / 2 + hyRemainDock.x;
+        x:parent.width*r1/(r1+r2+r3+r4);
+        y: captionHeight - offSetY;
+        width:parent.width*r2/(r1+r2+r3+r4)
+        height: width
+        //scale: autoScale
+        source: "resource/pic/hy.png"
+        Text{
+            id:hyPowerCaption
+            x:(hyPowerDock.width - width) / 2
+            y:-captionHeight
+            color:"white"
+            text:"燃料电池功率"
+            font.family: "文泉驿"
+            font.bold: false
+            font.pointSize: 22
+        }
+        Image{
+            id:hyPowerGraphIcon
+            source: "resource/pic/wave.png"
+            x:hyPowerDock.width / 2 - width / 2
+            y:hyPowerIncicator.y + hyPowerIncicator.height + 30
+            height:60
+            width: 120
+            MouseArea{
+                anchors.fill: parent
+                onClicked: {var component = Qt.createComponent("./powerGraph.qml");
+                            if(component.status == Component.Ready){
+								isHyGraphSubWindowExist = true
+                                powerWindowObject = component.createObject()
+                                powerWindowObject.visible = true
+                                powerWindowObject.pauseGraph.connect(pauseGraph)
+                                powerWindowObject.clearGraph.connect(clearGraph)
+                                isAllGraphStarted = true
+								powerWindowObject.main = main
+								main.hide()
+								powerWindowObject.raise()}}
+            }
+        }
+        Text{
+            id:hyPowerIncicator
+            x:hyPowerDock.width / 2 - width / 2
+            y:0.66 * parent.height
+            color:"white"
+            text:"0W"
+            font.family: lcdFont.name
+            font.bold: true
+            font.pointSize: 20 * fontScale
+        }
+        Rectangle{
+            id:hyPowerPointerWrapper
+            width:parent.width
+            height:parent.height
+            color:Qt.rgba(0, 0, 0, 0)
+            property int pointerAngle: -30
+            Canvas{
+                id:hyPowerPointer
+                width:parent.width
+                height:parent.height
+                onPaint: {
+                    var ctx = getContext("2d");
+                    ctx.save();
+                    ctx.clearRect(0, 0, hyPowerDock.width, hyPowerDock.height);
+                    ctx.beginPath();
+                    ctx.lineWidth = 1;
+                    ctx.strokeStyle = main.mainColor;
+                    ctx.fillStyle = main.mainColor;
+                    ctx.moveTo(50, hyPowerDock.height / 2);
+                    ctx.lineTo(hyPowerDock.width / 2, hyPowerDock.height / 2 - 10);
+                    ctx.arc(hyPowerDock.width / 2,
+                            hyPowerDock.height / 2,
+                            10,
+                            -Math.PI / 2,
+                            Math.PI / 2);
+                    ctx.lineTo(50, hyPowerDock.height / 2);
+                    ctx.closePath()
+                    ctx.fill()
+                    ctx.stroke();}
+            }
+            transform: Rotation{origin.x: hyPowerPointerWrapper.width / 2;
+                                origin.y: hyPowerPointerWrapper.height / 2;
+                                angle: hyPowerPointerWrapper.pointerAngle}
+        }
+    }
+    //锂电池仪表
+    Image{
+        id:liPowerDock
+        //x:hyPowerDock.x + width * 0.9 * autoScale;
+        x:parent.width*(r1+r2)/(r1+r2+r3+r4);
+        y:captionHeight - offSetY;
+        width:parent.width*r2/(r1+r2+r3+r4)
+        height: width
+        scale: autoScale
+        source: "resource/pic/li.png"
+        Text{
+            id:liPowerCaption
+            x:(liPowerDock.width - width) / 2
+            y:-captionHeight
+            color:"white"
+            text:"锂电池功率"
+            font.family: "文泉驿"
+            font.bold: false
+            font.pointSize: 22
+        }
+        Image{
+            id:liPowerGrapthIcon
+            source: "resource/pic/wave.png"
+            x:liPowerDock.width / 2 - width / 2
+            y:liPowerIncicator.y + liPowerIncicator.height + 30
+            height:60
+            width: 120
+        }
+        Text{
+            id:liPowerIncicator
+            x:liPowerDock.width / 2 - width / 2
+            y:0.66*parent.height
+            color:"white"
+            text:"0W"
+            font.family: lcdFont.name
+            font.bold: true
+            font.pointSize: 20 * fontScale
+        }
+        Rectangle{
+            id:liPowerPointerWrapper
+            width:parent.width
+            height:parent.height
+            color:Qt.rgba(0, 0, 0, 0)
+            property int pointerAngle: -30
+            Canvas{
+                id:liPowerPointer
+                width:parent.width
+                height:parent.height
+                onPaint: {
+                    var ctx = getContext("2d");
+                    ctx.save();
+                    ctx.clearRect(0, 0, liPowerDock.width, liPowerDock.height);
+                    ctx.beginPath();
+                    ctx.lineWidth = 1;
+                    ctx.strokeStyle = main.mainColor;
+                    ctx.fillStyle = main.mainColor;
+                    ctx.moveTo(50, liPowerDock.height / 2);
+                    ctx.lineTo(liPowerDock.width / 2, liPowerDock.height / 2 - 10);
+                    ctx.arc(liPowerDock.width / 2,
+                            liPowerDock.height / 2,
+                            10,
+                            -Math.PI / 2,
+                            Math.PI / 2);
+                    ctx.lineTo(50, liPowerDock.height / 2);
+                    ctx.closePath()
+                    ctx.fill()
+                    ctx.stroke();}
+            }
+            transform: Rotation{origin.x: liPowerPointerWrapper.width / 2;
+                                origin.y: liPowerPointerWrapper.height / 2;
+                                angle: liPowerPointerWrapper.pointerAngle}
+        }
+    }
+
 
     //氢气剩余仪表
     Image{
         id:hyRemainDock
-        x:200 * (smallAutoScale - 1) / 2;
-        y:hyPowerDock.height * 0.8 - height + captionHeight + 15 - offSetY;
-        width:200
-        height: 200
+        //x:200 * (smallAutoScale - 1) / 2;
+        //y:hyPowerDock.height * 0.8 - height + captionHeight + 15 - offSetY;
+        x:0 ;
+        y: hyPowerDock.height - height + captionHeight ;
+        width:parent.width*r1/(r1+r2+r3+r4);
+        height: width ;
         scale: smallAutoScale
         source: "resource/pic/hyremain.png"
         Text{
             id:hyRemainCaption
             x:(hyRemainDock.width - width) / 2
-            y:-40
+            y:-captionHeight
             color:"white"
             text:"氢气剩余"
             font.family: "文泉驿"
@@ -62,7 +232,7 @@ ApplicationWindow{
         Text{
             id:hyRemainIncicator
             x:hyRemainDock.width / 2 - width / 2
-            y:120
+            y:0.6*parent.height
             color:"white"
             text:"0MPa"
             font.family: lcdFont.name
@@ -106,172 +276,17 @@ ApplicationWindow{
                                 angle: hyRemainPointerWrapper.pointerAngle}
         }
     }
-    //氢气仪表
-    Image{
-        id:hyPowerDock
-        x:hyRemainDock.width * 0.9 * (3 * autoScale - 1) / 2 - hyRemainDock.width * (1 - hyRemainDock.scale) / 2 + hyRemainDock.x;
-        y: captionHeight - offSetY;
-        width:500
-        height: 500
-        scale: autoScale
-        source: "resource/pic/hy.png"
-        Text{
-            id:hyPowerCaption
-            x:(hyPowerDock.width - width) / 2
-            y:-50
-            color:"white"
-            text:"燃料电池功率"
-            font.family: "文泉驿"
-            font.bold: false
-            font.pointSize: 22
-        }
-        Image{
-            id:hyPowerGraphIcon
-            source: "resource/pic/wave.png"
-            x:hyPowerDock.width / 2 - width / 2
-            y:hyPowerIncicator.y + hyPowerIncicator.height + 30
-            height:60
-            width: 120
-            MouseArea{
-                anchors.fill: parent
-                onClicked: {var component = Qt.createComponent("./powerGraph.qml");
-                            if(component.status == Component.Ready){
-								isHyGraphSubWindowExist = true
-                                powerWindowObject = component.createObject()
-                                powerWindowObject.visible = true
-                                powerWindowObject.pauseGraph.connect(pauseGraph)
-                                powerWindowObject.clearGraph.connect(clearGraph)
-                                isAllGraphStarted = true
-								powerWindowObject.main = main
-								main.hide()
-								powerWindowObject.raise()}}
-            }
-        }
-        Text{
-            id:hyPowerIncicator
-            x:hyPowerDock.width / 2 - width / 2
-            y:330
-            color:"white"
-            text:"0W"
-            font.family: lcdFont.name
-            font.bold: true
-            font.pointSize: 20 * fontScale
-        }
-        Rectangle{
-            id:hyPowerPointerWrapper
-            width:500
-            height:500
-            color:Qt.rgba(0, 0, 0, 0)
-            property int pointerAngle: -30
-            Canvas{
-                id:hyPowerPointer
-                width:500
-                height:500
-                onPaint: {
-                    var ctx = getContext("2d");
-                    ctx.save();
-                    ctx.clearRect(0, 0, hyPowerDock.width, hyPowerDock.height);
-                    ctx.beginPath();
-                    ctx.lineWidth = 1;
-                    ctx.strokeStyle = main.mainColor;
-                    ctx.fillStyle = main.mainColor;
-                    ctx.moveTo(50, hyPowerDock.height / 2);
-                    ctx.lineTo(hyPowerDock.width / 2, hyPowerDock.height / 2 - 10);
-                    ctx.arc(hyPowerDock.width / 2,
-                            hyPowerDock.height / 2,
-                            10,
-                            -Math.PI / 2,
-                            Math.PI / 2);
-                    ctx.lineTo(50, hyPowerDock.height / 2);
-                    ctx.closePath()
-                    ctx.fill()
-                    ctx.stroke();}
-            }
-            transform: Rotation{origin.x: hyPowerPointerWrapper.width / 2;
-                                origin.y: hyPowerPointerWrapper.height / 2;
-                                angle: hyPowerPointerWrapper.pointerAngle}
-        }
-    }
-    //锂电池仪表
-    Image{
-        id:liPowerDock
-        x:hyPowerDock.x + width * 0.9 * autoScale;
-        y:captionHeight - offSetY;
-        width:500
-        height: 500
-        scale: autoScale
-        source: "resource/pic/li.png"
-        Text{
-            id:liPowerCaption
-            x:(liPowerDock.width - width) / 2
-            y:-50
-            color:"white"
-            text:"锂电池功率"
-            font.family: "文泉驿"
-            font.bold: false
-            font.pointSize: 22
-        }
-        Image{
-            id:liPowerGrapthIcon
-            source: "resource/pic/wave.png"
-            x:liPowerDock.width / 2 - width / 2
-            y:liPowerIncicator.y + liPowerIncicator.height + 30
-            height:60
-            width: 120
-        }
-        Text{
-            id:liPowerIncicator
-            x:liPowerDock.width / 2 - width / 2
-            y:330
-            color:"white"
-            text:"0W"
-            font.family: lcdFont.name
-            font.bold: true
-            font.pointSize: 20 * fontScale
-        }
-        Rectangle{
-            id:liPowerPointerWrapper
-            width:500
-            height:500
-            color:Qt.rgba(0, 0, 0, 0)
-            property int pointerAngle: -30
-            Canvas{
-                id:liPowerPointer
-                width:500
-                height:500
-                onPaint: {
-                    var ctx = getContext("2d");
-                    ctx.save();
-                    ctx.clearRect(0, 0, liPowerDock.width, liPowerDock.height);
-                    ctx.beginPath();
-                    ctx.lineWidth = 1;
-                    ctx.strokeStyle = main.mainColor;
-                    ctx.fillStyle = main.mainColor;
-                    ctx.moveTo(50, liPowerDock.height / 2);
-                    ctx.lineTo(liPowerDock.width / 2, liPowerDock.height / 2 - 10);
-                    ctx.arc(liPowerDock.width / 2,
-                            liPowerDock.height / 2,
-                            10,
-                            -Math.PI / 2,
-                            Math.PI / 2);
-                    ctx.lineTo(50, liPowerDock.height / 2);
-                    ctx.closePath()
-                    ctx.fill()
-                    ctx.stroke();}
-            }
-            transform: Rotation{origin.x: liPowerPointerWrapper.width / 2;
-                                origin.y: liPowerPointerWrapper.height / 2;
-                                angle: liPowerPointerWrapper.pointerAngle}
-        }
-    }
+    
     //锂电池剩余仪表
     Image{
         id:liRemainDock
-        x:main.width - width * (smallAutoScale + 1) / 2;
-        y:hyRemainDock.y;
+        //x:main.width - width * (smallAutoScale + 1) / 2;
+        //y:hyRemainDock.y;
+        x:parent.width*(r1+r2+r3)/(r1+r2+r3+r4)
+        y:y: liPowerDock.height - height + captionHeight ;
         z:-1
-        width:200
-        height: 200
+        width:parent.width*r4/(r1+r2+r3+r4)
+        height: width
         scale: smallAutoScale
         source: "resource/pic/liremain.png"
         Text{
@@ -295,7 +310,7 @@ ApplicationWindow{
         Text{
             id:liRemainIncicator
             x:liRemainDock.width / 2 - width / 2
-            y:120
+            y:0.6*parent.height
             color:"white"
             text:String(0) + "V"
             font.family: lcdFont.name
