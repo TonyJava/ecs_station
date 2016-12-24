@@ -438,7 +438,7 @@ ApplicationWindow{
                 Text{
                     id:remainTimeText
                     x:timeRemainTextLeftPic.width + 5
-                    color:"white"
+                    //color:"white"
                     text:"5:00:00"
                     font.family: lcdFont.name
                     font.bold: true
@@ -462,7 +462,7 @@ ApplicationWindow{
                 Text{
                     id:gasLastSpeedText
                     x:timeRemainTextRightPic.width + 5
-                    color:"white"
+                    //color:"white"
                     text:"0L/H"
                     font.family: lcdFont.name
                     font.bold: true
@@ -486,7 +486,7 @@ ApplicationWindow{
                 Text{
                     id:mileRemainText
                     x:mileRemainTextRightPic.width + 5
-                    color:"white"
+                    //color:"white"
                     text:"400KM"
                     font.family: lcdFont.name
                     font.bold: true
