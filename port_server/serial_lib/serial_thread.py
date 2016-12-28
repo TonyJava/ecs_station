@@ -66,7 +66,7 @@ class serial_listen_thread(threading.Thread):
 if __name__ == '__main__':
     print "test begin."
     #ps = serial.tools.list_ports.comports();    
-    sth =  serial_listen_thread();
+    sth =  serial_listen_thread(port="/dev/ttyUSB0");
     sth.start();
     
     cnt = 0 ;
