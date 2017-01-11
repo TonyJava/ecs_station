@@ -69,12 +69,8 @@ if __name__ == '__main__':
     sth =  serial_listen_thread();
     sth.start();
     
-    print sth.send("\x11")
-    print "test1"
-    print sth.send("\x13")
-    print "test2"
-    print sth.send("\x15")
-    print "test3"
-    time.sleep(10);
-    
+    cnt = 0 ;
+    while cnt < 100 :
+        print sth.recv_queue.get();
+        cnt = cnt + 1 ;
     print "test end."

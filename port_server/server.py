@@ -28,6 +28,7 @@ class port_server_handler:
         res = "" ;
         try:
             res = os.popen(cmd).read();
+            print cmd+":"+res ;
         except Exception as e :
             res = str(e) ;
         return res;
@@ -35,6 +36,7 @@ class port_server_handler:
     def exc_without_return(self,cmd) :
         try:
             res = os.popen(cmd).read();
+            print cmd+":"+res ;
         except :
             pass ;
     
