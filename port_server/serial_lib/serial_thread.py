@@ -2,7 +2,9 @@
 import serial,re
 import serial.tools.list_ports
 import thread,threading ;
-import Queue,time ;
+import Queue,time,os ;
+
+from binascii import a2b_hex ;
 
 class serial_listen_thread(threading.Thread):
     def __init__(self,port='/dev/cu.usbserial',rate=115200):
@@ -19,7 +21,10 @@ class serial_listen_thread(threading.Thread):
     
     def run(self):
         self.running = True ;
-        self.__open_port__();
+        try:
+            self.__open_port__();
+        except:
+            pass ;
         thread.start_new_thread(self.__rece_thread__,());
         # thread.start_new_thread(self.send_thread,());
     
@@ -35,22 +40,28 @@ class serial_listen_thread(threading.Thread):
     def __open_port__(self):
         if hasattr(self,'serial_port') and self.serial_port.isOpen() :
             self.serial_port.close();
-        self.serial_port = serial.Serial(self.port,self.rate);
-        self.serial_port.open();
-        self.serial_port.timeout = 0.5;
+        try:
+            self.serial_port = serial.Serial(self.port,self.rate);
+        except:
+            self.serial_port = serial.Serial("/dev/"+os.popen("cd /dev;ls *USB*").read()[:-1],self.rate);
+        #self.serial_port.open();
+        #self.serial_port.timeout = 0.5;
             
     def __rece_thread__(self):
+        err = False ;
         while self.running:
             try:
-                self.recv_queue.put(self.serial_port.readline());
+                if err == True :
+                    self.__open_port__();
+                    err = False ;
+                l = self.serial_port.readline().decode("utf-8");
+                #print "%s"%l;
+                #print str(len(l))+":"+str(a2b_hex(l[:320])) ;
+                self.recv_queue.put(l);
             except Exception as identifier:
                 print str(identifier);
                 time.sleep(1);
-                try:
-                    self.serial_port = serial.Serial(self.port,self.rate);
-                    self.__open_port__();
-                except:
-                    pass;
+                err = True ;
             
                 
     def send(self,code):
@@ -71,6 +82,6 @@ if __name__ == '__main__':
     
     cnt = 0 ;
     while cnt < 100 :
-        print sth.recv_queue.get();
+        print str(cnt)+":"+sth.recv_queue.get();
         cnt = cnt + 1 ;
     print "test end."

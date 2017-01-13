@@ -29,4 +29,5 @@ if __name__ == '__main__':
     e_test = ecs_http_client();
     print e_test.list_command();
     print e_test.insert_command(key="test1",code="code1");
-    print e_test.delete_command();
+    print e_test.insert_command(key="test2",code="code2");
+    print e_test.list_command();
