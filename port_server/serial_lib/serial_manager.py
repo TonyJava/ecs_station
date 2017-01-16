@@ -5,7 +5,7 @@ from constant_len_list import * ;
 
 class serial_manager(threading.Thread):
     
-    def __init__(self,port='/dev/cu.usbserial',rate=115200,cache_size=240):
+    def __init__(self,port='/dev/ttyUSB0',rate=115200,cache_size=240):
         threading.Thread.__init__(self);
         self.cache_size = cache_size ;
         self.sth = serial_listen_thread(port,rate);
@@ -13,6 +13,7 @@ class serial_manager(threading.Thread):
         self.cache_list = {} ;
         self.cmd_queue = Queue.Queue();
         self.running = False ;
+        self._d  = AES.new(self.key, AES.MODE_ECB, b'0' * 16);
        
     def set_serial_port(self,port,rate):
         return self.sth.set_serial_port(port,rate);
@@ -37,7 +38,9 @@ class serial_manager(threading.Thread):
         while self.running == True :
             try:
                 rtn = self.sth.recv_queue.get();
-                var_table = json.loads(rtn);
+                res = self._d.decrypt(a2b_hex(rtn[:320])).decode('utf-8')
+                print res ;
+                var_table = json.loads(res);
                 for var in var_table :
                     self.cache[var] = var_table[var] ;
             except Exception as e:
@@ -85,7 +88,8 @@ if __name__ == '__main__':
     sm = serial_manager();
     sm.start();
     for i in range(100):
-        time.sleep(10);
-        for key in sm.cache_list :
-            print str(key),str(sm.cache_list[key])
-        print i
+        time.sleep(2);
+        print sm.get_var_table();
+        #for key in sm.cache_list :
+        #    print str(key),str(sm.cache_list[key])
+        #print i
