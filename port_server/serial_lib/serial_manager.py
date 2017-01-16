@@ -2,6 +2,7 @@ from serial_thread import *;
 import time,json ;
 import Queue,thread,threading ;
 from constant_len_list import * ;
+from Crypto.Cipher import AES
 
 class serial_manager(threading.Thread):
     
