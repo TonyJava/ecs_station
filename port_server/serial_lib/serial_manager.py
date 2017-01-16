@@ -77,7 +77,7 @@ class serial_manager(threading.Thread):
                         self.cache_list[key] = constant_len_list(self.cache_size);
                     else :
                         self.cache_list[key].num = self.cache_size ;
-                    self.cache_list[key].add_tail(self.get_value(key));
+                    self.cache_list[key].add_tail(self.get_var(key));
     
     def get_var_list(self,key):
         if self.running ==  False :
