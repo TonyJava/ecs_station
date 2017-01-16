@@ -9,6 +9,14 @@ import tools
 from Crypto.Cipher import AES
 from binascii import a2b_hex
 
+from port_server import port_server
+from port_server.ttypes import *
+
+from thrift import Thrift
+from thrift.transport import TSocket
+from thrift.transport import TTransport
+from thrift.protocol import TBinaryProtocol
+
 class CustomSerial(threading.Thread):
     '''自定义串口类'''
     def __init__(self, com, baud, root, context):
