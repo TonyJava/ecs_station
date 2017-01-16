@@ -81,7 +81,7 @@ if __name__ == '__main__':
     sth.start();
     
     cnt = 0 ;
-    while cnt < 100 :
+    while cnt < 10000 :
         print str(cnt)+":"+sth.recv_queue.get();
         cnt = cnt + 1 ;
     print "test end."
