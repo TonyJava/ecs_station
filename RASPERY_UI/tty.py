@@ -5,9 +5,12 @@ import serial
 from time import sleep
 import json
 import threading
-import tools
+import tools,sys
 from Crypto.Cipher import AES
 from binascii import a2b_hex
+
+sys.path.append("../port_server/gen-py");
+sys.path.append("../port_server/gen-py/port_server");
 
 from port_server import port_server
 from port_server.ttypes import *
@@ -40,18 +43,18 @@ class CustomSerial(threading.Thread):
         conn = False ;
         while conn == False :
             try:
-            transport = TSocket.TSocket("localhost", 9090) ;
-            # Buffering is critical. Raw sockets are very slow
-            transport = TTransport.TFramedTransport(transport)
-            # Wrap in a protocol
-            protocol = TBinaryProtocol.TBinaryProtocol(transport)
-            # Create a client to use the protocol encoder
-            client = port_server.Client(protocol)
-            # Connect!
-            transport.open()
-            conn = True ;
-        except Exception as e :
-            print str(e);
+                transport = TSocket.TSocket("localhost", 9090) ;
+                # Buffering is critical. Raw sockets are very slow
+                transport = TTransport.TFramedTransport(transport)
+                # Wrap in a protocol
+                protocol = TBinaryProtocol.TBinaryProtocol(transport)
+                # Create a client to use the protocol encoder
+                client = port_server.Client(protocol)
+                # Connect!
+                transport.open()
+                conn = True ;
+            except Exception as e :
+                print(e);
         return client
 
     def run(self):
@@ -62,6 +65,8 @@ class CustomSerial(threading.Thread):
                 #jc = self._d.decrypt(a2b_hex(content[:320])).decode('utf-8')
                 #jc = jc[:jc.find('}') + 1]
                 j = json.loads(client.get_var_table());     
+                if j["code"] == 0 :
+                    j = j["result"];
                 #j = {"HyTemp":0,"HyPress":0,"LiVolt":0,"HyVolt":0,'DCInCurrent':0,"TotalCurrent":0} ;
                 print(j)          
                 power = j["LiVolt"] * j["TotalCurrent"]
@@ -85,7 +90,7 @@ class CustomSerial(threading.Thread):
                                        "LiPower":self._liPower[-300:],
                                        "AllPower":self._allPower[-300:],
                                        "x":list(range(self._x))[-300:]}
-                sleep(0.1)
+                sleep(1)
 
             except Exception as e:
                 print(e)
