@@ -14,6 +14,7 @@ class serial_manager(threading.Thread):
         self.cache_list = {} ;
         self.cmd_queue = Queue.Queue();
         self.running = False ;
+        self.key = '1234567890abcdef'
         self._d  = AES.new(self.key, AES.MODE_ECB, b'0' * 16);
        
     def set_serial_port(self,port,rate):
