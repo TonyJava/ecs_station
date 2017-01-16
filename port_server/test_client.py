@@ -1,7 +1,7 @@
 import sys, glob
 
 sys.path.append('gen-py')
-sys.path.insert(0, glob.glob('./lib/py/build/lib.*')[0])
+#sys.path.insert(0, glob.glob('./lib/py/build/lib.*')[0])
 
 from port_server import port_server
 from port_server.ttypes import *
@@ -29,11 +29,12 @@ try:
     # Connect!
     transport.open()
 
-    cmd = "test" ;
+    cmd = "dir" ;
 
     res = client.exc(cmd);
     print res 
-except e:
+    print client.get_var_table();
+except Exception as e:
     print str(e);
     
     

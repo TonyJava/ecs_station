@@ -56,7 +56,7 @@ class port_server_handler:
             res = {"code":1,"result":str(e)};
         return json.dumps(res);
 
-    def get_var_table(self,key):
+    def get_var_table(self):
         res = {};
         try:
             rtn = self.sm.get_var_table()
