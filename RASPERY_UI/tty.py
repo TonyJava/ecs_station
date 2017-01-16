@@ -28,14 +28,33 @@ class CustomSerial(threading.Thread):
         self.key = '1234567890abcdef'
         self._d  = AES.new(self.key, AES.MODE_ECB, b'0' * 16)
 
+    def connect_server(self):
+        conn = False ;
+        while conn == False :
+            try:
+            transport = TSocket.TSocket("localhost", 9090) ;
+            # Buffering is critical. Raw sockets are very slow
+            transport = TTransport.TFramedTransport(transport)
+            # Wrap in a protocol
+            protocol = TBinaryProtocol.TBinaryProtocol(transport)
+            # Create a client to use the protocol encoder
+            client = port_server.Client(protocol)
+            # Connect!
+            transport.open()
+            conn = True ;
+        except Exception as e :
+            print str(e);
+        return client
+
     def run(self):
+        client = self.connect_server();
         while(self.isRun):
             try:
                 #content=self.s.readline().decode('utf-8')
                 #jc = self._d.decrypt(a2b_hex(content[:320])).decode('utf-8')
                 #jc = jc[:jc.find('}') + 1]
-                #j = json.loads(jc)     
-                j = {"HyTemp":0,"HyPress":0,"LiVolt":0,"HyVolt":0,'DCInCurrent':0,"TotalCurrent":0} ;
+                j = json.loads(client.get_var_table());     
+                #j = {"HyTemp":0,"HyPress":0,"LiVolt":0,"HyVolt":0,'DCInCurrent':0,"TotalCurrent":0} ;
                 print(j)          
                 power = j["LiVolt"] * j["TotalCurrent"]
                 # print(power)
@@ -62,6 +81,7 @@ class CustomSerial(threading.Thread):
 
             except Exception as e:
                 print(e)
+                self.connect_server();
                 pass
 
 
