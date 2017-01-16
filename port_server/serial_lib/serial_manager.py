@@ -41,6 +41,7 @@ class serial_manager(threading.Thread):
             try:
                 rtn = self.sth.recv_queue.get();
                 res = self._d.decrypt(a2b_hex(rtn[:320])).decode('utf-8')
+                res = res[:res.rfind('}') + 1]
                 print res ;
                 var_table = json.loads(res);
                 for var in var_table :
