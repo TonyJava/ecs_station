@@ -100,11 +100,11 @@ if __name__ == '__main__':
     #server = TServer.TThreadedServer(processor, transport, tfactory, pfactory)
     #server = TServer.TThreadPoolServer(processor, transport, tfactory, pfactory)
 
-    # pid = str(os.getpid())
-    # PIDFILE = '/tmp/PythonServer.pid'
-    # pidfile = open(PIDFILE,'w')
-    # pidfile.write(pid)
-    # pidfile.close()
+    pid = str(os.getpid())
+    PIDFILE = '/tmp/PythonServer.pid'
+    pidfile = open(PIDFILE,'w')
+    pidfile.write(pid)
+    pidfile.close()
 
     print 'Starting the server...'
     server.serve()
