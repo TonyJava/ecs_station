@@ -54,25 +54,27 @@ class CustomSerial(threading.Thread):
                 transport.open()
                 conn = True ;
             except Exception as e :
-                print(e);
+                print(e)
+                client = None ;
         return client
 
     def run(self):
-        client = self.connect_server();
+        #client = self.connect_server();
+        err = True ;
         while(self.isRun):
             try:
-                #content=self.s.readline().decode('utf-8')
-                #jc = self._d.decrypt(a2b_hex(content[:320])).decode('utf-8')
-                #jc = jc[:jc.find('}') + 1]
+                if err == True || client == None :
+                    client = self.connect_server();
+                    if client != None :
+                        err = False ;
                 j = json.loads(client.get_var_table());     
                 if j["code"] == 0 :
                     j = j["result"];
-                #j = {"HyTemp":0,"HyPress":0,"LiVolt":0,"HyVolt":0,'DCInCurrent':0,"TotalCurrent":0} ;
+                else :
+                    continue ;
                 print(j)          
-                power = j["LiVolt"] * j["TotalCurrent"]
-                # print(power)
-                # hyPower = tools.fakeData(power)
-                hyPower = j['HyVolt'] * j['DCInCurrent'] * 1.5
+                power = j["LiVolt"] * j["TotalCurrent"];
+                hyPower = j['HyVolt'] * j['DCInCurrent'];
                 # print(hyPower)
                 self.pointData = {"HyTemp":j["HyTemp"],
                                   #"HyPress":29.22,
@@ -94,7 +96,7 @@ class CustomSerial(threading.Thread):
 
             except Exception as e:
                 print(e)
-                self.connect_server();
+                err = True ;
                 pass
 
 
