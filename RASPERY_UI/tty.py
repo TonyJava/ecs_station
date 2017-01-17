@@ -63,7 +63,7 @@ class CustomSerial(threading.Thread):
         err = True ;
         while(self.isRun):
             try:
-                if err == True || client == None :
+                if err == True or client == None :
                     client = self.connect_server();
                     if client != None :
                         err = False ;
