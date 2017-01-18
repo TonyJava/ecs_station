@@ -11,6 +11,12 @@ from tools import Tools
 
 if __name__ == '__main__':
     try:
+        pid = str(os.getpid())
+        PIDFILE = '/tmp/ui_process.pid'
+        pidfile = open(PIDFILE,'w')
+        pidfile.write(pid)
+        pidfile.close()
+
         cwd = sys.path[0]
         myApp = QGuiApplication(sys.argv)
         appLabel = QQmlApplicationEngine()

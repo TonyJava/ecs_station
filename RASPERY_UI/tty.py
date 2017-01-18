@@ -72,7 +72,7 @@ class CustomSerial(threading.Thread):
                     j = j["result"];
                 else :
                     continue ;
-                print(j)          
+                #print(j)          
                 power = j["LiVolt"] * j["TotalCurrent"];
                 hyPower = j['HyVolt'] * j['DCInCurrent'];
                 # print(hyPower)
