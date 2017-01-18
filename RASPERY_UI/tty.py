@@ -67,6 +67,8 @@ class CustomSerial(threading.Thread):
                     client = self.connect_server();
                     if client != None :
                         err = False ;
+                    else :
+                        continue ;
                 j = json.loads(client.get_var_table());     
                 if j["code"] == 0 :
                     j = j["result"];
@@ -95,7 +97,7 @@ class CustomSerial(threading.Thread):
                 sleep(1)
 
             except Exception as e:
-                print(e)
+                #print(e)
                 err = True ;
                 pass
 

@@ -3,7 +3,7 @@ import time ;
 from go import * ;
 
 
-if __name__ == "main":
+if __name__ == "__main__":
     pid = str(os.getpid())
     PIDFILE = '/tmp/go_monitor.pid'
     pidfile = open(PIDFILE,'w')
