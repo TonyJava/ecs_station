@@ -43,6 +43,7 @@ class CustomSerial(threading.Thread):
         conn = False ;
         while conn == False :
             try:
+                sleep(1);
                 transport = TSocket.TSocket("localhost", 9090) ;
                 # Buffering is critical. Raw sockets are very slow
                 transport = TTransport.TFramedTransport(transport)

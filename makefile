@@ -7,5 +7,5 @@ run :
 memcached :
 	memcached -d -m 128 -u root  -p 11212  -P /tmp/memcached.pid
 kill_all:
-	pgrep uwsgi | xargs kill -9
+	#pgrep uwsgi | xargs kill -9
 	pgrep python | xargs kill -9

@@ -140,8 +140,8 @@ ApplicationWindow{
             source: "resource/pic/wave.png"
             x:hyPowerDock.width / 2 - width / 2
             y:hyPowerIncicator.y + hyPowerIncicator.height + 30
-            height:60
-            width: 120
+            height:parent.width/6
+            width: height*2
             MouseArea{
                 anchors.fill: parent
                 onClicked: {var component = Qt.createComponent("./powerGraph.qml");
@@ -227,8 +227,8 @@ ApplicationWindow{
             source: "resource/pic/wave.png"
             x:liPowerDock.width / 2 - width / 2
             y:liPowerIncicator.y + liPowerIncicator.height + 30
-            height:60
-            width: 120
+            height:parent.width/6
+            width: height*2
         }
         Text{
             id:liPowerIncicator
