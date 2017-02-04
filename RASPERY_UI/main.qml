@@ -140,7 +140,7 @@ ApplicationWindow{
             source: "resource/pic/wave.png"
             x:hyPowerDock.width / 2 - width / 2
             y:hyPowerIncicator.y + hyPowerIncicator.height + 30
-            height:parent.width/6
+            height:parent.width/8
             width: height*2
             MouseArea{
                 anchors.fill: parent
@@ -227,7 +227,7 @@ ApplicationWindow{
             source: "resource/pic/wave.png"
             x:liPowerDock.width / 2 - width / 2
             y:liPowerIncicator.y + liPowerIncicator.height + 30
-            height:parent.width/6
+            height:parent.width/8
             width: height*2
         }
         Text{
