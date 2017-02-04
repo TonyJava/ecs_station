@@ -11,8 +11,10 @@ ApplicationWindow{
     id:power
 	x:0
 	y:0
-    width:800;
-    height:480;
+    //width:800;
+    //height:480;
+    width:Screen.desktopAvailableWidth;
+    height:Screen.desktopAvailableHeight;
     color: "#ff333333";
     visible:true;
     flags:Qt.FramelessWindowHint | Qt.WA_TranslucentBackground;
